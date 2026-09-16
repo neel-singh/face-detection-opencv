@@ -4,53 +4,50 @@ A modular command-line computer vision application for detecting human faces in 
 
 The project supports two detection approaches:
 
-- **Haar Cascade** — fast classical computer-vision detector
-- **DNN/SSD** — deep-learning based detector for improved detection accuracy
+- **Haar Cascade** — classical computer-vision face detector
+- **DNN/SSD** — deep-learning based detector
 
-Built as a **Computer Vision course project**.
+## Sample Output
 
-![Sample Output](docs/Screenshot 2026-09-17 020622.png)
+The application successfully detects a face from a live webcam feed and draws a bounding box around the detected face.
+
+![Face Detection Sample Output](docs/sample_output.png)
 
 ## Features
 
-- Detect faces in JPG/PNG images
-- Detect faces frame-by-frame in video files
+- Detect faces in images
+- Detect faces in video files
 - Real-time webcam face detection
-- Selectable Haar Cascade or DNN/SSD detector
+- Haar Cascade and DNN detection backends
 - Configurable webcam device index
-- Frame-skipping for better performance on slower systems
+- Frame-skipping for video/webcam processing
 - Automatic annotated output generation
-- Centralized application logging
-- Modular, class-based Python architecture
-- Unit tests using synthetic images
-- Architecture, workflow, UML and project-report documentation
+- Centralized logging
+- Unit tests
+- Project documentation and diagrams
 
 ## Tech Stack
 
-- **Python 3.9+**
-- **OpenCV**
-- **NumPy**
-- **PyTest**
+- Python 3.11+
+- OpenCV
+- NumPy
+- PyTest
 
 ## Project Structure
 
 ```text
 face-detection-opencv/
-├── main.py                     # CLI entry point
-├── config.py                   # Application configuration
+├── main.py
+├── config.py
 ├── modules/
-│   ├── __init__.py
-│   ├── face_detector.py        # Haar + DNN face detectors
-│   ├── image_processor.py      # Image processing pipeline
-│   ├── video_processor.py      # Video/webcam processing
-│   ├── logger_config.py        # Logging configuration
-│   └── utils.py                # Drawing and helper utilities
+│   ├── face_detector.py
+│   ├── image_processor.py
+│   ├── video_processor.py
+│   ├── logger_config.py
+│   └── utils.py
 ├── tests/
-│   ├── __init__.py
-│   ├── test_face_detector.py
-│   └── test_image_processor.py
 ├── models/
-│   └── README.md               # DNN model setup instructions
+│   └── README.md
 ├── docs/
 │   ├── Project_Report.pdf
 │   ├── architecture_diagram.png
@@ -58,7 +55,7 @@ face-detection-opencv/
 │   ├── sequence_diagram.png
 │   ├── use_case_diagram.png
 │   ├── workflow_diagram.png
-│   └── sample_output_preview.png
+│   └── sample_output.png
 ├── requirements.txt
 ├── statement.md
 ├── .gitignore
@@ -80,7 +77,7 @@ cd face-detection-opencv
 
 ```powershell
 py -3.11 -m venv venv
-.env\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 ```
 
 **macOS/Linux:**
@@ -97,15 +94,9 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-> The OpenCV version is pinned because this project uses the `cv2.CascadeClassifier` API required by the Haar detector.
-
 ## Usage
 
-Run all commands from the project root.
-
 ### Webcam
-
-Start real-time face detection with Haar Cascade:
 
 ```bash
 python main.py --mode webcam --show --method haar
@@ -119,8 +110,6 @@ Press **Q** to close the preview.
 python main.py --mode image --input path/to/photo.jpg --method haar
 ```
 
-The annotated image is automatically saved in `output/`.
-
 ### Video
 
 ```bash
@@ -129,13 +118,13 @@ python main.py --mode video --input path/to/video.mp4 --method haar
 
 ### DNN detector
 
-After downloading the required DNN model files:
+After downloading the required model files, run:
 
 ```bash
 python main.py --mode webcam --show --method dnn
 ```
 
-See [`models/README.md`](models/README.md) for model setup.
+See [`models/README.md`](models/README.md) for DNN model setup.
 
 ### Command-line help
 
@@ -143,30 +132,15 @@ See [`models/README.md`](models/README.md) for model setup.
 python main.py --help
 ```
 
-| Option | Description | Default |
-|---|---|---|
-| `--mode` | `image`, `video`, or `webcam` | Required |
-| `--input` | Input image/video path | Required for image/video |
-| `--output` | Output path | Auto-generated |
-| `--method` | `haar` or `dnn` | `haar` |
-| `--camera-index` | Webcam device index | `0` |
-| `--frame-skip` | Detect every Nth frame | `1` |
-| `--max-frames` | Stop after N frames | Unlimited |
-| `--show` | Display live preview | Off |
-
 ## Testing
 
-Run the test suite with:
+Run:
 
 ```bash
 pytest tests/ -v
 ```
 
-The tests use synthetic images and do not require an external dataset.
-
 ## Architecture
-
-The application follows a modular pipeline:
 
 ```text
 Input
@@ -176,7 +150,7 @@ Input
   └── Webcam
        │
        ▼
-Video/Image Processor
+Image / Video Processor
        │
        ▼
 Face Detector
@@ -191,35 +165,11 @@ Detection Results
        └── Logs
 ```
 
-Detailed diagrams are available in the [`docs/`](docs/) directory.
-
-## Performance and Reliability
-
-- `--frame-skip` can reduce computation for video/webcam streams.
-- Input paths and detector configuration are validated.
-- Detection and processing are separated into independent modules.
-- Runtime errors are handled at the CLI boundary.
-- Logging is centralized for easier debugging and monitoring.
+Detailed diagrams and the project report are available in the [`docs/`](docs/) directory.
 
 ## DNN Models
 
-DNN model weights are intentionally **not committed to GitHub** because they are binary model files and can be large.
-
-Follow [`models/README.md`](models/README.md) to download and place the required files locally.
-
-## Documentation
-
-The repository includes:
-
-- Project report
-- System architecture diagram
-- Workflow diagram
-- Use case diagram
-- Class diagram
-- Sequence diagram
-- Problem statement
-
-See [`docs/Project_Report.pdf`](docs/Project_Report.pdf) for the complete report.
+DNN model weights are intentionally excluded from GitHub because they are large binary files. Follow [`models/README.md`](models/README.md) to download and place the required files locally.
 
 ## Author
 
@@ -227,7 +177,3 @@ See [`docs/Project_Report.pdf`](docs/Project_Report.pdf) for the complete report
 
 Computer Science Undergraduate  
 Computer Vision Course Project
-
-## License
-
-This project was developed for academic/educational purposes.
