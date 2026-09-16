@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+env/
+*.egg-info/
+
+# Project runtime artifacts
+output/
+logs/
+*.log
+
+# DNN model weights (large binary files - see README for download link)
+models/*.caffemodel
+models/*.prototxt
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
