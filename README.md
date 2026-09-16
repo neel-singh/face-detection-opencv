@@ -1,172 +1,233 @@
-# Face Detection CLI (OpenCV)
+# Face Detection CLI using OpenCV
 
-A command-line face detection tool built with OpenCV. It can detect
-faces in a **still image**, a **video file**, or a **live webcam
-feed**, using either the classical **Haar Cascade** detector or a
-more accurate **deep-learning (DNN) SSD** detector, and saves an
-annotated copy of the input with bounding boxes drawn around every
-detected face.
+A modular command-line computer vision application for detecting human faces in **images, videos, and live webcam feeds** using OpenCV.
 
-Built as a course project for **Computer Vision**.
+The project supports two detection approaches:
 
-![Sample annotated output](docs/sample_output_preview.png)
+- **Haar Cascade** — fast classical computer-vision detector
+- **DNN/SSD** — deep-learning based detector for improved detection accuracy
 
----
+Built as a **Computer Vision course project**.
 
-## 1. Features
+![Sample Output](docs/sample_output_preview.png)
 
-- **Image mode** – detect faces in a single JPG/PNG file.
-- **Video mode** – detect faces frame-by-frame in a video file and
-  save an annotated copy.
-- **Webcam mode** – run detection live on a webcam feed.
-- **Two selectable detection backends**: Haar Cascade (fast, no
-  download needed) and DNN/SSD (more accurate, optional model
-  download).
-- **Frame-skip control** for smoother performance on slower machines.
-- **Centralized logging** to both console and a log file.
-- **Modular, class-based architecture** that is easy to extend with
-  new detectors or input sources.
+## Features
 
-## 2. Project Structure
+- Detect faces in JPG/PNG images
+- Detect faces frame-by-frame in video files
+- Real-time webcam face detection
+- Selectable Haar Cascade or DNN/SSD detector
+- Configurable webcam device index
+- Frame-skipping for better performance on slower systems
+- Automatic annotated output generation
+- Centralized application logging
+- Modular, class-based Python architecture
+- Unit tests using synthetic images
+- Architecture, workflow, UML and project-report documentation
 
-```
-face-detection-cv/
+## Tech Stack
+
+- **Python 3.9+**
+- **OpenCV**
+- **NumPy**
+- **PyTest**
+
+## Project Structure
+
+```text
+face-detection-opencv/
 ├── main.py                     # CLI entry point
-├── config.py                   # Central configuration (paths, thresholds)
+├── config.py                   # Application configuration
 ├── modules/
-│   ├── face_detector.py        # Face Detection module (Haar + DNN)
-│   ├── image_processor.py      # Image I/O + processing module
-│   ├── video_processor.py      # Video/webcam I/O + processing module
-│   ├── logger_config.py        # Centralized logging setup
-│   └── utils.py                # Drawing / formatting helpers
+│   ├── __init__.py
+│   ├── face_detector.py        # Haar + DNN face detectors
+│   ├── image_processor.py      # Image processing pipeline
+│   ├── video_processor.py      # Video/webcam processing
+│   ├── logger_config.py        # Logging configuration
+│   └── utils.py                # Drawing and helper utilities
 ├── tests/
-│   ├── test_face_detector.py   # Unit tests for detection logic
-│   └── test_image_processor.py # Unit tests for image pipeline
-├── models/                     # (Optional) DNN model files go here
-│   └── README.md               # How to download the DNN model files
-├── docs/                       # Design diagrams (architecture, UML, etc.)
-├── output/                     # Annotated results are written here
-├── logs/                       # Run logs
+│   ├── __init__.py
+│   ├── test_face_detector.py
+│   └── test_image_processor.py
+├── models/
+│   └── README.md               # DNN model setup instructions
+├── docs/
+│   ├── Project_Report.pdf
+│   ├── architecture_diagram.png
+│   ├── class_diagram.png
+│   ├── sequence_diagram.png
+│   ├── use_case_diagram.png
+│   ├── workflow_diagram.png
+│   └── sample_output_preview.png
 ├── requirements.txt
-├── statement.md                # Problem statement & scope
-└── README.md                   # You are here
+├── statement.md
+├── .gitignore
+└── README.md
 ```
 
-This gives the project **3 major functional modules**
-(`face_detector`, `image_processor`, `video_processor`), each with a
-clear, single responsibility, tied together by the `main.py` CLI.
+## Installation
 
-## 3. Requirements
-
-- Python 3.9 or newer
-- pip
-
-Dependencies are listed in `requirements.txt`:
-
-```
-opencv-python>=4.8.0
-numpy>=1.24.0
-pytest>=7.4.0
-```
-
-## 4. Setup
-
-Clone the repository and install dependencies (a virtual environment
-is recommended):
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/neel-singh/face-detection-opencv.git
+cd face-detection-opencv
+```
 
+### 2. Create a virtual environment
+
+**Windows PowerShell:**
+
+```powershell
+py -3.11 -m venv venv
+.env\Scripts\Activate.ps1
+```
+
+**macOS/Linux:**
+
+```bash
 python3 -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
+```
 
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Optional: enabling the DNN detector
+> The OpenCV version is pinned because this project uses the `cv2.CascadeClassifier` API required by the Haar detector.
 
-The Haar Cascade backend (`--method haar`) works immediately with no
-extra setup — the cascade file ships inside `opencv-python`. To also
-use `--method dnn`, download two small model files as described in
-[`models/README.md`](models/README.md) and place them in the
-`models/` folder.
+## Usage
 
-## 5. How to Run
+Run all commands from the project root.
 
-All commands are run from the project's root folder.
+### Webcam
 
-**Detect faces in an image:**
+Start real-time face detection with Haar Cascade:
+
+```bash
+python main.py --mode webcam --show --method haar
+```
+
+Press **Q** to close the preview.
+
+### Image
+
 ```bash
 python main.py --mode image --input path/to/photo.jpg --method haar
 ```
 
-**Detect faces in a video file:**
+The annotated image is automatically saved in `output/`.
+
+### Video
+
 ```bash
-python main.py --mode video --input path/to/clip.mp4 --method dnn
+python main.py --mode video --input path/to/video.mp4 --method haar
 ```
 
-**Detect faces using your webcam, with a live preview window:**
+### DNN detector
+
+After downloading the required DNN model files:
+
 ```bash
-python main.py --mode webcam --show
+python main.py --mode webcam --show --method dnn
 ```
 
-**Run detection on the webcam headlessly for a fixed number of
-frames** (useful on machines/servers without a display):
-```bash
-python main.py --mode webcam --max-frames 100
-```
+See [`models/README.md`](models/README.md) for model setup.
 
-**Full option list:**
+### Command-line help
+
 ```bash
 python main.py --help
 ```
 
-| Flag | Description | Default |
+| Option | Description | Default |
 |---|---|---|
-| `--mode` | `image`, `video`, or `webcam` (required) | – |
-| `--input` | Path to input image/video (required for `image`/`video`) | – |
-| `--output` | Path to save annotated output | auto-generated in `output/` |
+| `--mode` | `image`, `video`, or `webcam` | Required |
+| `--input` | Input image/video path | Required for image/video |
+| `--output` | Output path | Auto-generated |
 | `--method` | `haar` or `dnn` | `haar` |
 | `--camera-index` | Webcam device index | `0` |
-| `--frame-skip` | Run detector every N frames (video/webcam) | `1` |
-| `--max-frames` | Stop after N frames | unlimited |
-| `--show` | Show a live preview window | off |
+| `--frame-skip` | Detect every Nth frame | `1` |
+| `--max-frames` | Stop after N frames | Unlimited |
+| `--show` | Display live preview | Off |
 
-Results are saved under `output/`, and every run is logged to
-`logs/face_detection.log`.
+## Testing
 
-## 6. Testing
-
-Unit tests cover the detector and image-processing logic (invalid
-input handling, successful detection pipeline, factory validation):
+Run the test suite with:
 
 ```bash
-pip install pytest   # already in requirements.txt
 pytest tests/ -v
 ```
 
-The tests use only synthetically generated images, so they run
-without needing any external dataset or model download.
+The tests use synthetic images and do not require an external dataset.
 
-## 7. Non-Functional Requirements Addressed
+## Architecture
 
-| Requirement | How it's addressed |
-|---|---|
-| **Performance** | `--frame-skip` lets the detector run every N frames instead of every frame on video/webcam input. |
-| **Usability** | Simple, self-documenting CLI (`--help`) with sensible defaults. |
-| **Reliability** | Input files, cascade paths, and model files are validated; the app fails with a clear message instead of crashing silently. |
-| **Maintainability** | Modular package layout, a common `FaceDetector` interface, and a single `config.py` for all tunables. |
-| **Error Handling** | Custom, specific exceptions (`FileNotFoundError`, `ValueError`, `IOError`) are caught at the CLI boundary and reported to the user. |
-| **Logging/Monitoring** | Every run logs to both console and `logs/face_detection.log` via a shared logger. |
+The application follows a modular pipeline:
 
-## 8. Design Diagrams
+```text
+Input
+  │
+  ├── Image
+  ├── Video
+  └── Webcam
+       │
+       ▼
+Video/Image Processor
+       │
+       ▼
+Face Detector
+  ├── Haar Cascade
+  └── DNN / SSD
+       │
+       ▼
+Detection Results
+       │
+       ├── Bounding Boxes
+       ├── Annotated Output
+       └── Logs
+```
 
-See the `docs/` folder for the System Architecture Diagram, Workflow
-Diagram, Use Case Diagram, Class Diagram, and Sequence Diagram
-generated for this project (also included in the project report).
+Detailed diagrams are available in the [`docs/`](docs/) directory.
 
-## 9. Author / Course
+## Performance and Reliability
 
-Submitted as the flipped-course evaluation project for **Computer
-Vision**.
+- `--frame-skip` can reduce computation for video/webcam streams.
+- Input paths and detector configuration are validated.
+- Detection and processing are separated into independent modules.
+- Runtime errors are handled at the CLI boundary.
+- Logging is centralized for easier debugging and monitoring.
+
+## DNN Models
+
+DNN model weights are intentionally **not committed to GitHub** because they are binary model files and can be large.
+
+Follow [`models/README.md`](models/README.md) to download and place the required files locally.
+
+## Documentation
+
+The repository includes:
+
+- Project report
+- System architecture diagram
+- Workflow diagram
+- Use case diagram
+- Class diagram
+- Sequence diagram
+- Problem statement
+
+See [`docs/Project_Report.pdf`](docs/Project_Report.pdf) for the complete report.
+
+## Author
+
+**Neel Singh**
+
+Computer Science Undergraduate  
+Computer Vision Course Project
+
+## License
+
+This project was developed for academic/educational purposes.
