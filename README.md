@@ -9,7 +9,7 @@ The project supports two detection approaches:
 
 Built as a **Computer Vision course project**.
 
-![Sample Output](docs/Screenshot%202026-09-17%20020622.png.png)
+![Sample Output](docs/Screenshot 2026-09-17 020622.png)
 
 ## Features
 
